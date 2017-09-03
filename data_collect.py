@@ -1,3 +1,23 @@
+
+'''
+    The program is designed to download weather data and location.
+    Copyright (C) <2017>  <Sumina SN>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+'''
+
 from __future__ import division
 import datetime
 import requests
@@ -8,6 +28,8 @@ from pandas import DataFrame
 import forecastio
 
 os.environ['TZ'] = 'UTC'
+
+##################Download location Info##################
 
 def download_location_info(location_list):
     
@@ -41,6 +63,8 @@ def download_location_info(location_list):
     print(location_info_list)
     return location_info_list
 
+##################Download Weather data##################
+
 def download_weather_data(location_info_list, start_date, api_key):
     weather_data = {}
     for location_info in location_info_list:
@@ -52,7 +76,7 @@ def download_weather_data(location_info_list, start_date, api_key):
                     location_info["lng"],
                     time=start_date+datetime.timedelta(date_offset),
                     units="us"
-                )
+                )#using forecastio to download weather data
                 
                 for hour in forecast.hourly().data:
                     weather_data['loc'] = weather_data.get('loc', []) + [location_info['location']]
@@ -68,6 +92,8 @@ def download_weather_data(location_info_list, start_date, api_key):
                 return weather_data
     return weather_data
 
+##################Main Function##################
+
 def main():
     location_list = None
     print ("Begin")
@@ -75,10 +101,10 @@ def main():
         location_list = [line.strip() for line in f]
     print (location_list)
 
-    location_info_list = download_location_info(location_list)
+    location_info_list = download_location_info(location_list) #download location Info
     print ("End")
     
-    weather_data = download_weather_data(location_info_list, datetime.datetime(2015, 1, 1), '790a053f46cda18de23944de6b44fc91')
+    weather_data = download_weather_data(location_info_list, datetime.datetime(2015, 1, 1), '790a053f46cda18de23944de6b44fc91') #download weather data
     if weather_data is not None:
         df = pandas.DataFrame(weather_data)
         df.to_csv('data/training_weather_data.csv')
