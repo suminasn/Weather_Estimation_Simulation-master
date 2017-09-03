@@ -40,7 +40,7 @@ os.environ['TZ'] = 'UTC'
 
 def get_temperature_model(df):
 
-    temp_linr_model = linear_model.LinearRegression()
+    temp_linr_model = linear_model.LinearRegression(fit_intercept=True, normalize=True)
     input_x = df[['lat', 'lng', 'elev', 'time']].values
     temp_y = df[['temp']].values
 
@@ -49,7 +49,7 @@ def get_temperature_model(df):
 
 def get_humidity_model(df):
 
-    hum_linr_model = linear_model.LinearRegression()
+    hum_linr_model = linear_model.LinearRegression(fit_intercept=True, normalize=True)
     input_x = df[['lat', 'lng', 'elev', 'time']].values
     hum_y = df[['hum']].values
 
@@ -58,7 +58,7 @@ def get_humidity_model(df):
 
 def get_pressure_model(df):
 
-    pres_linr_model = linear_model.LinearRegression()
+    pres_linr_model = linear_model.LinearRegression(fit_intercept=True, normalize=True)
     input_x = df[['lat', 'lng', 'elev', 'time']].values
     pres_y = df[['pres']].values
 
