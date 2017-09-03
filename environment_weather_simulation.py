@@ -1,3 +1,4 @@
+
 '''
     The program is designed to simulate weather conditions of a game.
     Copyright (C) <2017>  <Sumina SN>
