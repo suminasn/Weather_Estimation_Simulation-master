@@ -43,6 +43,7 @@ def download_location_info(location_list):
         try:
             location_info = {'location': location}
 
+            #location info is obtained using google api.
             rgc = requests.get(geocode_url+location).json()
             if rgc.get('results'):
                 for rgc_results in rgc.get('results'):
@@ -50,6 +51,7 @@ def download_location_info(location_list):
                     location_info['lat'] = latlong.get('lat','')
                     location_info['lng'] = latlong.get('lng','')
 
+                    #elevation info is obtained from google by using the location data (Latitude and Longitude) obtained.
                     relev = requests.get(elevation_url + str(location_info['lat']) + ',' + str(location_info['lng'])).json()
                     if relev.get("results"):
                         for relev_results in relev.get("results"):
@@ -71,13 +73,14 @@ def download_weather_data(location_info_list, start_date, api_key):
     for location_info in location_info_list:
         for date_offset in range(0, 365, 7):
             try:
+                #weather info is obtained by using the location data (Latitude and Longitude) obtained, through forecastio api.
                 forecast = forecastio.load_forecast(
                     api_key,
                     location_info["lat"],
                     location_info["lng"],
                     time=start_date+datetime.timedelta(date_offset),
                     units="us"
-                )#using forecastio to download weather data
+                )
                 
                 for hour in forecast.hourly().data:
                     weather_data['loc'] = weather_data.get('loc', []) + [location_info['location']]
@@ -102,11 +105,15 @@ def main():
         location_list = [line.strip() for line in f]
     print (location_list)
 
-    location_info_list = download_location_info(location_list) #download location Info
+    #download location Info
+    location_info_list = download_location_info(location_list)
     print ("End")
-    
-    weather_data = download_weather_data(location_info_list, datetime.datetime(2015, 1, 1), '790a053f46cda18de23944de6b44fc91') #download weather data
+
+    #download weather data
+    weather_data = download_weather_data(location_info_list, datetime.datetime(2015, 1, 1), '790a053f46cda18de23944de6b44fc91')
     if weather_data is not None:
+
+        #writing data to csv file
         df = pandas.DataFrame(weather_data)
         df.to_csv('data/training_weather_data.csv')
         print ("download complete - data creation done")
