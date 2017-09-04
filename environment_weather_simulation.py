@@ -132,9 +132,7 @@ def main():
     # Please specify training data file path here
     df = pandas.read_csv('data/training_weather_data.csv')
 
-    # Generating models for weather predictions
-    # using linear regression for floating point labels
-    # and Random Forest model for string labels
+    # Generating models for weather predictions using linear regression for floating point labels and Random Forest model for string labels
     temp_model = get_temperature_model(df)
     pres_model = get_pressure_model(df)
     hum_model = get_humidity_model(df)
